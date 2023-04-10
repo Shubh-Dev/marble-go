@@ -1,13 +1,18 @@
 package main
 
 import (
-	"fmt"
 
 	"github.com/Marbleture/api/database"
 	"github.com/Marbleture/api/marble"
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
+	"github.com/gofiber/swagger"
+	"github.com/marbleture/api/docs/doc.go"
 )
+
+//	@title			marbleture API
+//	@version		1.0
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
 func setUpRoutes(app *fiber.App) {
 	app.Get("/api/v1/marble", marble.GetMarbles)
@@ -16,20 +21,13 @@ func setUpRoutes(app *fiber.App) {
 	app.Delete("/api/v1/marble/:id", marble.DeleteMarble)
 }
 
-func initDatabase() {
-	var err error
-	 database.DBConnect, err = gorm.Open("postgreSQL", "marbles.db")
-	if err != nil {
-		panic("Failed to connect to database!")
-	}
-	fmt.Println("Database connection successfully opened!")
-}
-
 func main() {
 	app := fiber.New()
-	initDatabase()
+	database.ConnectDB()
 	setUpRoutes(app)
 	app.Listen(":3000")
+
+	
 }
 
 
