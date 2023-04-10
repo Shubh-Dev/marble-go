@@ -5,17 +5,15 @@ import (
 )
 
 func setUpRoutes(app *fiber.App) {
-	app.Get("/marbles", marble.getMarbles)
-	app.Get("/marbles/:marbleId", marble.getMarble)
-	app.Post("/marbles", marble.newMarble)
-	app.Delete("/marbles/:marbleId", marble.deleteMarble)
+	app.Get("/api/v1/marble", marble.GetMarbles)
+	app.Get("/api/v1/marble/:id", marble.GetMarble)
+	app.Post("/api/v1/marble", marble.NewMarble)
+	app.Delete("/api/v1/marble/:id", marble.DeleteMarble)
 }
 
 func main() {
 	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	setUpRoutes(app)
 	app.Listen(":3000")
 }
 
