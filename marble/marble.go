@@ -20,5 +20,4 @@ func DeleteMarble(c *fiber.Ctx) error {
 	return c.SendString("Delete a single marble")
 }
 
-// Path: main.go
 
