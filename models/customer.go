@@ -26,5 +26,3 @@ type CustomerAddress struct {
 	CustomerID uint     `json:"customer_id"`
 	Customer   Customer `json:"customer" gorm:"foreignKey:CustomerID"`
 }
-
-
