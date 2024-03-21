@@ -1,12 +1,16 @@
 package database
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/Marbleture/api/models"
+	"os"
+
+	"github.com/Shubh-Dev/marble-go/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"github.com/joho/dotenv"
 )
 
 type Dbinstance struct {
@@ -16,7 +20,19 @@ type Dbinstance struct {
 var DB Dbinstance
 
 func ConnectDB() {
-	dsn := "host = localhost user = postgres password = motorola123 dbname = marble port = 5432 sslmode = disable TimeZone = Asia/Shanghai"
+	err := dotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file:", err)
+	}
+	databasePassword := os.Getenv("DATABASE_PASSWORD")
+	if databasePassword == "" {
+		fmt.Println("Database password not set")
+	} else {
+		fmt.Println("database password", databasePassword)
+	}
+	// dsn := "host = localhost user = postgres password = %v dbname = marble port = 5432 sslmode = disable TimeZone = Asia/Shanghai"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		"localhost", "postgres", databasePassword, "marble", "5432", "disable", "Asia/Shanghai")
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
