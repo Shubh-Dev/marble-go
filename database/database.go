@@ -7,10 +7,10 @@ import (
 	"os"
 
 	"github.com/Shubh-Dev/marble-go/models"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"github.com/joho/dotenv"
 )
 
 type Dbinstance struct {
@@ -20,7 +20,8 @@ type Dbinstance struct {
 var DB Dbinstance
 
 func ConnectDB() {
-	err := dotenv.Load()
+	var runMigration bool = false
+	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file:", err)
 	}
@@ -28,7 +29,7 @@ func ConnectDB() {
 	if databasePassword == "" {
 		fmt.Println("Database password not set")
 	} else {
-		fmt.Println("database password", databasePassword)
+		fmt.Println("Password retrived from env")
 	}
 	// dsn := "host = localhost user = postgres password = %v dbname = marble port = 5432 sslmode = disable TimeZone = Asia/Shanghai"
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
@@ -44,11 +45,13 @@ func ConnectDB() {
 
 	log.Println("DB connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
-	log.Println("running Migration")
-	db.AutoMigrate(&models.Coupon{}, &models.CustomerAddress{}, &models.Customer{},
-		&models.Discount{}, &models.OrderDiscount{}, &models.OrderItem{},
-		&models.Order{}, &models.ProductDiscount{}, &models.ProductImage{}, &models.ProductStock{},
-		&models.ProductVariation{}, &models.Product{}, &models.StockLocation{}, &models.Voucher{})
+	if runMigration {
+		log.Println("running Migration")
+		db.AutoMigrate(&models.Coupon{}, &models.CustomerAddress{}, &models.Customer{},
+			&models.Discount{}, &models.OrderDiscount{}, &models.OrderItem{},
+			&models.Order{}, &models.ProductDiscount{}, &models.ProductImage{}, &models.ProductStock{},
+			&models.ProductVariation{}, &models.Product{}, &models.StockLocation{}, &models.Voucher{})
+	}
 
 	DB = Dbinstance{Db: db}
 }
