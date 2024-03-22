@@ -20,7 +20,7 @@ type Dbinstance struct {
 var DB Dbinstance
 
 func ConnectDB() {
-	var runMigration bool = false
+	var runMigration bool = true
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file:", err)
@@ -47,10 +47,11 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 	if runMigration {
 		log.Println("running Migration")
-		db.AutoMigrate(&models.Coupon{}, &models.CustomerAddress{}, &models.Customer{},
-			&models.Discount{}, &models.OrderDiscount{}, &models.OrderItem{},
-			&models.Order{}, &models.ProductDiscount{}, &models.ProductImage{}, &models.ProductStock{},
-			&models.ProductVariation{}, &models.Product{}, &models.StockLocation{}, &models.Voucher{})
+		// db.AutoMigrate(&models.Coupon{}, &models.CustomerAddress{}, &models.Customer{},
+		// 	&models.Discount{}, &models.OrderDiscount{}, &models.OrderItem{},
+		// 	&models.Order{}, &models.ProductDiscount{}, &models.ProductImage{}, &models.ProductStock{},
+		// 	&models.ProductVariation{}, &models.Product{}, &models.StockLocation{}, &models.Voucher{})
+		db.AutoMigrate(&models.Candidate{})
 	}
 
 	DB = Dbinstance{Db: db}
